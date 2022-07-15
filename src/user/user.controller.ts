@@ -12,11 +12,11 @@ import {
   /* Logger,
   Injectable,*/
 } from '@nestjs/common';
-import { AuthGuard } from 'src/guard/auth.guard';
+import { AuthGuard } from '../guard/auth.guard';
 import { UsersService } from './user.service';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { HttpExceptionFilter } from 'src/exception-filter/http-exception.filter';
+import { HttpExceptionFilter } from '../exception-filter/http-exception.filter';
 import { Logger as WinstonLogger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 

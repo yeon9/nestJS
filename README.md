@@ -15,6 +15,7 @@
 - TypeORM
 - Exception Filter
 - Custom Exception
+- Testing
 
 ## <br>Installation
 

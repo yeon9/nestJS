@@ -13,7 +13,6 @@ export class CareersService {
 
   async findAll(): Promise<Career[]> {
     const result: Career[] = await this.careersRepository.find();
-    console.log(result);
     return result;
   }
 
@@ -25,6 +24,7 @@ export class CareersService {
 
   async create(career: CreateCareerDto) {
     await this.careersRepository.save(career);
+    return true;
   }
 
   async remove(id: number): Promise<void> {

@@ -13,34 +13,35 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { CareersService } from './careers.service';
-import { Career } from 'src/entities/careers.entity';
-import { HttpExceptionFilter } from 'src/exception-filter/http-exception.filter';
-import { HttpBadRequestError } from 'src/errors/bad-request.error';
+import { Career } from '../entities/careers.entity';
+import { HttpExceptionFilter } from '../exception-filter/http-exception.filter';
+import { HttpBadRequestError } from '../errors/bad-request.error';
 import * as TEXT from '../constants/text.constant';
 import { CreateCareerDto } from './dto/createCareer.dto';
+import { InternalServerError } from '../errors/internal-server-error.error';
 
 @Controller('careers')
 @UseFilters(new HttpExceptionFilter())
 export class CareersController {
   constructor(private careersService: CareersService) {}
 
-  // @Get()
-  // async getAllCareers(): Promise<Career[]> {
-  //   return await this.careersService.findAll();
-  // }
-
   @Get()
-  async getAllCareers(@Response() res) {
-    try {
-      const careers: Career[] = await this.careersService.findAll();
-
-      res.status(200).json({ data: careers });
-    } catch (err) {
-      console.error('[Error] ', err);
-      const { status, error, message } = err.response;
-      res.status(status).json({ error, message });
-    }
+  async getAllCareers(): Promise<Career[]> {
+    return await this.careersService.findAll();
   }
+
+  // @Get()
+  // async getAllCareers(@Response() res) {
+  //   try {
+  //     const careers: Career[] = await this.careersService.findAll();
+
+  //     res.status(200).json({ data: careers });
+  //   } catch (err) {
+  //     console.error('[Error] ', err);
+  //     // const { status, error, message } = err.response;
+  //     //  res.status(500).json({ error: err });
+  //   }
+  // }
 
   @Get(':id')
   // @UseFilters(new HttpExceptionFilter())
@@ -48,22 +49,22 @@ export class CareersController {
     const career: Career = await this.careersService.findOne(id);
     if (!career) {
       //throw new HttpBadRequestError('채용중인 포지션이 없습니다.');
-      throw new HttpBadRequestError('채용중인 포지션이 없습니다.');
+      throw new InternalServerError('채용중인 포지션이 없습니다.');
     }
     res.status(200).json({ data: career });
   }
 
   @Post()
   // @UseFilters(new HttpExceptionFilter())
-  async create(@Response() res, @Body() career: CreateCareerDto) {
+  async create(@Body() career: CreateCareerDto) {
     await this.careersService
       .create(career)
       .catch((err) => {
         if (err.code == TEXT.HAVE_NO_VALUE)
           throw new HttpBadRequestError('입력되지 않은 값이 있습니다.');
       })
-      .then(() => {
-        res.status(200).json({ data: true });
+      .then((result) => {
+        return result;
       });
 
     // throw new HttpException(
